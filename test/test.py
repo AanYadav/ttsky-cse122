@@ -4,7 +4,6 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, Timer
 
-# {A,B,C,D,E,F,G} expected values, indexed 0-15
 EXPECTED = {
     0x0: 0b0111111,
     0x1: 0b0000110,
@@ -36,18 +35,22 @@ async def test_project(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 20)
     dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 10)
 
     dut._log.info("Test all 16 hex digits")
     for i in range(16):
         dut.ui_in.value = i
-        await Timer(1, units="us")  # combinational settle time
+        await Timer(1, unit="us")
 
-        actual = int(dut.uo_out.value) & 0x7F  # lower 7 bits = A-G
+        val = dut.uo_out.value
+        assert val.is_resolvable, \
+            f"Input {i:#x}: output contains X/Z values: {val}"
+        actual = int(val) & 0x7F
         expected = EXPECTED[i]
         assert actual == expected, \
-            f"Input {i:#x}: expected uo_out[6:0]={expected:#09b}, got {actual:#09b}"
+            f"Input {i:#x}: expected {expected:#09b}, got {actual:#09b}"
         dut._log.info(f"  {i:#x} -> {actual:#09b} PASS")
 
     dut._log.info("All tests passed!")
