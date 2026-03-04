@@ -7,7 +7,7 @@ from cocotb.triggers import ClockCycles, Timer
 # {A,B,C,D,E,F,G} expected values, indexed 0-15
 EXPECTED = {
     0x0: 0b0111111,
-    0x1: 0b0001100,
+    0x1: 0b0000110,
     0x2: 0b1011011,
     0x3: 0b1001111,
     0x4: 0b1100110,
