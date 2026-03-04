@@ -23,7 +23,6 @@ module hex7seg(
     input  logic d3,d2,d1,d0,
     output logic A,B,C,D,E,F,G
 );
-    // Logic updated to Active-High (Removed the leading '!')
     assign A = ((~d3&~d2&~d1&d0)|(~d3&d2&~d1&~d0)|(d3&~d2&d1&d0)|(d3&d2&~d1&d0));
     assign B = ((~d3&d2&~d1&d0)|(~d3&d2&d1&~d0)|(d3&~d2&d1&d0)|(d3&d2&~d1&~d0)|(d3&d2&d1&~d0)|(d3&d2&d1&d0));
     assign C = ((~d3&~d2&d1&~d0)|(d3&d2&~d1&~d0)|(d3&d2&d1&~d0)|(d3&d2&d1&d0));
