@@ -1,49 +1,114 @@
 `default_nettype none
 `timescale 1ns / 1ps
 
-/* This testbench just instantiates the module and makes some convenient wires
-   that can be driven / tested by the cocotb test.py.
-*/
-module tb ();
+module tb;
 
-  // Dump the signals to a FST file. You can view it with gtkwave or surfer.
-  initial begin
-    $dumpfile("tb.fst");
-    $dumpvars(0, tb);
-    #1;
-  end
 
-  // Wire up the inputs and outputs:
-  reg clk;
-  reg rst_n;
-  reg ena;
-  reg [7:0] ui_in;
-  reg [7:0] uio_in;
-  wire [7:0] uo_out;
-  wire [7:0] uio_out;
-  wire [7:0] uio_oe;
-`ifdef GL_TEST
-  wire VPWR = 1'b1;
-  wire VGND = 1'b0;
-`endif
 
-  // Replace tt_um_example with your module name:
-  tt_um_example user_project (
+logic d3,d2,d1,d0;
 
-      // Include power ports for the Gate Level test:
-`ifdef GL_TEST
-      .VPWR(VPWR),
-      .VGND(VGND),
-`endif
+logic A,B,C,D,E,F,G;
 
-      .ui_in  (ui_in),    // Dedicated inputs
-      .uo_out (uo_out),   // Dedicated outputs
-      .uio_in (uio_in),   // IOs: Input path
-      .uio_out(uio_out),  // IOs: Output path
-      .uio_oe (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
-      .ena    (ena),      // enable - goes high when design is selected
-      .clk    (clk),      // clock
-      .rst_n  (rst_n)     // not reset
-  );
+
+
+hex7seg hex7seg(
+
+.d3,
+
+.d2,
+
+.d1,
+
+.d0,
+
+
+
+.A,
+
+.B,
+
+.C,
+
+.D,
+
+.E,
+
+.F,
+
+.G
+
+);
+
+
+
+initial begin
+
+$dumpfile( "dump.fst" );
+
+$dumpvars;
+
+$display( "Begin simulation." );
+
+
+
+for (int i = 0; i < 16; i++) begin
+
+{d3,d2,d1,d0} = 4'(i);
+
+#1;
+
+end
+
+
+
+$display( "End simulation." );
+
+$finish;
+
+end
+
+
+
+always @* begin
+
+unique case ({d3,d2,d1,d0})
+
+4'h0: assert ({A,B,C,D,E,F,G} == 7'b1111110) else $error("Assertion failed: Wrong result for 0");
+
+4'h1: assert ({A,B,C,D,E,F,G} == 7'b0110000) else $error("Assertion failed: Wrong result for 1");
+
+4'h2: assert ({A,B,C,D,E,F,G} == 7'b1101101) else $error("Assertion failed: Wrong result for 2");
+
+4'h3: assert ({A,B,C,D,E,F,G} == 7'b1111001) else $error("Assertion failed: Wrong result for 3");
+
+4'h4: assert ({A,B,C,D,E,F,G} == 7'b0110011) else $error("Assertion failed: Wrong result for 4");
+
+4'h5: assert ({A,B,C,D,E,F,G} == 7'b1011011) else $error("Assertion failed: Wrong result for 5");
+
+4'h6: assert ({A,B,C,D,E,F,G} == 7'b1011111) else $error("Assertion failed: Wrong result for 6");
+
+4'h7: assert ({A,B,C,D,E,F,G} == 7'b1110000) else $error("Assertion failed: Wrong result for 7");
+
+4'h8: assert ({A,B,C,D,E,F,G} == 7'b1111111) else $error("Assertion failed: Wrong result for 8");
+
+4'h9: assert ({A,B,C,D,E,F,G} == 7'b1111011) else $error("Assertion failed: Wrong result for 9");
+
+4'ha: assert ({A,B,C,D,E,F,G} == 7'b1110111) else $error("Assertion failed: Wrong result for a");
+
+4'hb: assert ({A,B,C,D,E,F,G} == 7'b0011111) else $error("Assertion failed: Wrong result for b");
+
+4'hc: assert ({A,B,C,D,E,F,G} == 7'b1001110) else $error("Assertion failed: Wrong result for c");
+
+4'hd: assert ({A,B,C,D,E,F,G} == 7'b0111101) else $error("Assertion failed: Wrong result for d");
+
+4'he: assert ({A,B,C,D,E,F,G} == 7'b1001111) else $error("Assertion failed: Wrong result for e");
+
+4'hf: assert ({A,B,C,D,E,F,G} == 7'b1000111) else $error("Assertion failed: Wrong result for f");
+
+endcase
+
+end
+
+
 
 endmodule
