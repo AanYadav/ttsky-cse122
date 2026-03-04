@@ -24,8 +24,7 @@ module tt_um_hex_decoder (
         .d0(ui_in[0]),
         .A(A), .B(B), .C(C), .D(D), .E(E), .F(F), .G(G)
     );
-
-    // Map A-G to uo_out — adjust bit order to match your testbench's expectations
+    
     assign uo_out = {1'b0, G, F, E, D, C, B, A};
 
 endmodule
